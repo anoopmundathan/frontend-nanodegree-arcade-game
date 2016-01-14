@@ -58,6 +58,7 @@
                  */
                 if(isReady()) {
                     readyCallbacks.forEach(function(func) { func(); });
+
                 }
             };
 

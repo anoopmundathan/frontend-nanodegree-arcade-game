@@ -56,7 +56,7 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+       win.requestAnimationFrame(main);
     }
 
     /* This function does some initial setup that should only occur once,
@@ -80,7 +80,15 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+    }
+
+    /* This function checks any collision is happening betweeen Enemy objects and
+    Player object*/
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy) {
+            enemy.collision();
+        });
     }
 
     /* This is called by the update function and loops through all of the
@@ -119,6 +127,7 @@ var Engine = (function(global) {
             numCols = 5,
             row, col;
 
+            ctx.clearRect(0,0, canvas.width, canvas.height);
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
@@ -132,10 +141,9 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+              ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
         renderEntities();
     }
 
@@ -162,6 +170,8 @@ var Engine = (function(global) {
         // noop
     }
 
+    
+
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
@@ -171,10 +181,14 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png'
     ]);
     Resources.onReady(init);
-
+    
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developers can use it more easily
      * from within their app.js files.
