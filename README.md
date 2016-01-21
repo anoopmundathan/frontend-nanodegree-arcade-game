@@ -15,9 +15,7 @@ Every time you reach water - you earn points. Every time you earn a point you wi
 
 One additional life for Green gem
 
-Extra points for Orange gem
-
-Extra points for Blue gem
+Extra points for Orange & Blue gem
 
 ## How to start the game
 
