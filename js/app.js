@@ -13,12 +13,11 @@ var PLAYER_POINTS  = 100; //how much player can earn once reached water
 var gameFlag = "start"; // this variable controls game start, pause and end
 
 /**
-* @class
 * @description Enemy class
-* @param {string} sprite - The image of an enemy
 * @param {number} x - X-coordinate of an enemy
 * @param {number} y - X-coordinate of an enemy
 * @param {number} speed - initial speed of an enemy
+* @param {string} sprite - The image of an enemy
 */
 var Enemy = function(x, y, speed) {
     this.x = x;
@@ -27,8 +26,10 @@ var Enemy = function(x, y, speed) {
     this.sprite = 'images/enemy-bug.png';
 };
 
-//@function - Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+/**
+* @description - Update the enemy's position,
+* @parm {number} dt -  time delta between ticks
+*/
 Enemy.prototype.update = function(dt) {
 
    this.x = this.x + this.speed;
@@ -40,7 +41,9 @@ Enemy.prototype.update = function(dt) {
     }
 };
 
-//@function - check collision with player
+/**
+* @description - check collision with player
+*/
 Enemy.prototype.collision = function () {
 
     /* If player collided with any of the enemy, reset player position 
@@ -53,7 +56,10 @@ Enemy.prototype.collision = function () {
     }
 
 }
-//@function - Draw the enemy on the screen, required method for game
+
+/**
+* @description - Draw the enemy on the screen
+*/
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -61,9 +67,6 @@ Enemy.prototype.render = function() {
 
 /**
 * @description Player class
-* @class
-* @param {number} x - X-coordinate of a player
-* @param {number} y - X-coordinate of a player
 * @param {string} sprite - The image of a player
 */
 var Player = function (sprite) {
@@ -74,7 +77,10 @@ var Player = function (sprite) {
     this.sprite = sprite;
 };
 
-//@function - Update the player position and score
+/**
+* @description - Update the player position and score
+* @parm {number} dt -  time delta between ticks
+*/
 Player.prototype.update = function (dt) {
 
     /*If player has reached water, place player in starting position again and 
@@ -92,7 +98,10 @@ Player.prototype.update = function (dt) {
     }
 };
 
-//@function - Draw player, life and score on the screen
+/**
+* @descrition - Draw player, life and score on the screen
+* @parm {number} dt -  time delta between ticks
+*/
 Player.prototype.render = function (dt) {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     ctx.clearRect(0,10,400,30);
@@ -103,7 +112,7 @@ Player.prototype.render = function (dt) {
 };
 
 /**
-* @function - reset player position, change score and life
+* @description - reset player position, change life
 * once collision has been detected
 */
 Player.prototype.reset = function () {
@@ -122,25 +131,28 @@ Player.prototype.reset = function () {
 
 /**
 * @description Gem class
-* @class
 * @param {number} x - X-coordinate of a gem
 * @param {number} y - X-coordinate of a gem
 * @param {string} sprite - The image of a gem
 */
-var Gem = function (sprite, type) {
+var Gem = function (sprite) {
 
     this.x = Math.floor(Math.random() * 200); 
     this.y = Math.floor(Math.random() * 200);
     this.sprite = sprite;
 }
 
-//@function - Draw Gem on to the screen
+/**
+* @description - Draw Gem on to the screen
+*/
 Gem.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite),this.x,this.y);
 }
 
-//@function - this function checks if player collected any gems
-//add benefit according to gem
+/**
+* @description - this function checks if player collected any gems
+* add benefit according to gem
+*/
 Gem.prototype.collectGems = function () {
 
     //If player collected gems
@@ -189,8 +201,9 @@ allEnemies.push(enemyBug03);
 //Create Player object
 player = new Player();
 
-
-//@function - to handle keyboard events
+/**
+* @description - to handle keyboard events
+*/
 Player.prototype.handleInput = function(key) {
     if (key == 'up') {
         // Allow all 'up' movements, as a win will be
