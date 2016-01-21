@@ -25,10 +25,80 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
+   
     canvas.width = 505;
-    canvas.height = 606;
+    canvas.height = 400;
+    
     doc.body.appendChild(canvas);
 
+    canvas.style.margin = "100px";
+   
+    //@function - This function calls at the start of the game
+    function startGame() {
+
+        var heroes = [
+                'images/char-boy.png',
+                'images/char-cat-girl.png',
+                'images/char-horn-girl.png',
+                'images/char-pink-girl.png',
+                'images/char-princess-girl.png'
+        ];
+
+        //Draw canvas
+        ctx.fillStyle = "red";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        ctx.font = '40pt Impact';
+        ctx.textAlign = 'center';
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 3;
+
+        ctx.fillStyle = "black";
+        ctx.strokeText("WELCOME TO", canvas.width/2,100);   
+        ctx.strokeText("ARCADE GAME", canvas.width/2,150); 
+      
+        ctx.font = '15pt Arial';
+        ctx.strokeStyle = 'yellow';
+        ctx.fillStyle = 'yellow';
+        ctx.textAlign = 'left';
+        ctx.fillText("Press Key  [ 1 - 5 ]  to select  player  & start game", 20,240);   
+       
+        var xPos = 45;
+        //Draw each player into the canvas for selection
+        for (var index=0; index<heroes.length; index++) {
+            ctx.drawImage(Resources.get(heroes[index]), index * 100, 200);
+            ctx.fillText(index + 1 , xPos, 365);
+            xPos += 100;   
+        }
+
+        //check if any key is pressed
+        doc.addEventListener('keyup', function(e) {
+            var allowedKeys = {
+                49: 0,
+                50: 1,
+                51: 2,
+                52: 3,
+                53: 4
+            };
+
+            //if any key pressed between 1 and 5, start the game
+            if ((allowedKeys[e.keyCode] >= 0) && (allowedKeys[e.keyCode]) <= 4) {
+                doc.removeEventListener('keyup');
+
+                //create player object from selected player
+                player = new Player(heroes[allowedKeys[e.keyCode]]);
+
+                ctx.fillStyle = "white";
+                ctx.rect(0,0,canvas.width,canvas.height);
+                ctx.fill();
+                gameFlag = "started";
+                canvas.height = 606;
+                canvas.style.margin = "10px";
+            }
+
+        });
+    }
+    
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -39,6 +109,9 @@ var Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
+
+        //start game if this flag is 'started'
+        if (gameFlag ==="started") {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
@@ -53,10 +126,33 @@ var Engine = (function(global) {
          */
         lastTime = now;
 
+        
+        //end the game is flag is 'end'
+        } else if (gameFlag === "end") {
+
+            endGame();
+        }
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
        win.requestAnimationFrame(main);
+   
+    }
+
+    //@function - This function get executed once game is over*/
+    function endGame () {
+
+        ctx.fillStyle = "red";
+        ctx.fillRect(0,240,canvas.width,100);
+        ctx.font = '25pt Impact';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'white';
+        ctx.fillText("GAME OVER", canvas.width/2,280);
+
+        ctx.font = '15pt Arial';
+        ctx.beginPath(0,300);
+        ctx.fillText("Press Key  [ 1 - 5 ]  to continue", canvas.width/2,310);    
+
     }
 
     /* This function does some initial setup that should only occur once,
@@ -64,9 +160,9 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
-        lastTime = Date.now();
-        main();
+            reset();
+            lastTime = Date.now();
+            main();
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -99,9 +195,17 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
+
+        //update enemy object
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+        
+        //check if player collected any gems
+        gems.forEach(function(gem) {
+            gem.collectGems();
+        });
+        //update player object
         player.update();
     }
 
@@ -142,8 +246,9 @@ var Engine = (function(global) {
                  * we're using them over and over.
                  */
               ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
-            }
+           }
         }
+            
         renderEntities();
     }
 
@@ -155,11 +260,19 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        //draw gems
+        gems.forEach(function(gem) {
+            gem.render();
+        });
+
+        //draw enemy bugs
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
+        //draw player
         player.render();
+
     }
 
     /* This function does nothing but it could have been a good place to
@@ -167,10 +280,9 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        //initial screen before game starts
+        startGame();
     }
-
-    
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
@@ -185,9 +297,14 @@ var Engine = (function(global) {
         'images/char-cat-girl.png',
         'images/char-horn-girl.png',
         'images/char-pink-girl.png',
-        'images/char-princess-girl.png'
+        'images/char-princess-girl.png',
+        'images/gem-blue.png',
+        'images/gem-green.png',
+        'images/gem-orange.png',
+        'images/background.png'
     ]);
     Resources.onReady(init);
+    
     
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developers can use it more easily
