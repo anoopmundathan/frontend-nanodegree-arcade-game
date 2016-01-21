@@ -11,10 +11,12 @@ Your goal is to reach the water. You also need to avoid enemies.
 If you collide with an enemy - you lose one life.
 If you lose your last life - the game is ended.
 
-Every time you reach water - you earn points. Every time you earn a point you will see a new gems coming (green, blue or yellow) . You will get following benefit if you collected gems.
+Every time you reach water - you earn points. Every time you earn a point you will see a new gem coming (green, blue or yellow) . You will get following benefit if you collected gems.
 
-one additional life for Green gem
-Extra points for Orange Gem
+One additional life for Green gem
+
+Extra points for Orange gem
+
 Extra points for Blue gem
 
 ## How to start the game
