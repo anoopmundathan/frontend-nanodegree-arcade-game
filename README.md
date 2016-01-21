@@ -1,6 +1,43 @@
 frontend-nanodegree-arcade-game
 ===============================
+## About this project
+It is a classical arcade game (Frogger) with a number of modification.
+It is made as a project for Udacity Nanodegree.
 
-Students should use this [rubric](https://www.udacity.com/course/viewer/#!/c-nd001/l-2696458597/m-2687128535) for self-checking their submission.
+## About the game
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+### General description
+Your goal is to reach the water. You also need to avoid enemies.
+If you collide with an enemy - you lose one life.
+If you lose your last life - the game is ended.
+
+Every time you reach water - you earn points. Every time you earn a point you will see a new gems coming (green, blue or yellow) . You will get following benefit if you collected gems.
+
+one additional life for Green gem
+Extra points for Orange Gem
+Extra points for Blue gem
+
+## How to start the game
+
+You can goto below link
+[Link] (http://anoopmundathan.github.io/frontend-nanodegree-arcade-game/)
+
+OR
+
+* Download the game files (or fork them from github) [Link](https://github.com/anoopmundathan/frontend-nanodegree-arcade-game.git)
+* Open index.html file in your browser
+* You should see a starting screen - Select your player by pressing key between 1 to 5
+
+## Control
+
+### Starting screen
+Press key between 1 to 5 for selecting player
+
+### Game
+During the game you can move player by using arrows (left, right, up, down), also you can select 1 to 5 key to change player
+
+### Pause game
+Press SPACEBAR to pause the game
+
+### End of the game
+Press key between 1 to 5 to start game again.
