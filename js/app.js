@@ -1,30 +1,46 @@
-// Enemies our player must avoid
-var Enemy = function(x, y, speed) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+//constant DECLARATION
+var CANVAS_WIDTH  = 505;  //canvas width
+var CANVAS_HEIGHT = 606;  //canvas height
+
+//PLAYER 
+var PLAYER_LIVES   = 3;   //starting number of lives
+var PLAYER_START_X = 200; //starting x cordinate position 
+var PLAYER_START_Y = 400; //starting y cordinate position
+var PLAYER_STEP    = 20;  //player movement speed
+var PLAYER_POINTS  = 100; //how much player can earn once reached water
+
+var gameFlag = "start"; // this variable controls game start, pause and end
+
+/**
+* @class
+* @description Enemy class
+* @param {string} sprite - The image of an enemy
+* @param {number} x - X-coordinate of an enemy
+* @param {number} y - X-coordinate of an enemy
+* @param {number} speed - initial speed of an enemy
+*/
+var Enemy = function(x, y, speed) {
     this.x = x;
     this.y = y;
     this.speed = speed;
     this.sprite = 'images/enemy-bug.png';
 };
 
-// Update the enemy's position, required method for game
+//@function - Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+
    this.x = this.x + this.speed;
 
-    if (this.x > 505) {
+   //if bug has crossed canvas width, reset to starting position again
+    if (this.x > CANVAS_WIDTH ) {
          this.x = 0;
-         this.y = Math.floor(Math.random() * 200);
+         this.y = Math.floor(Math.random() * 280);
     }
 };
 
+//@function - check collision with player
 Enemy.prototype.collision = function () {
 
     /* If player collided with any of the enemy, reset player position 
@@ -32,55 +48,122 @@ Enemy.prototype.collision = function () {
     if ((this.x + 75 > player.x) && (this.y + 70 > player.y ) &&
         (this.x < player.x + 50) && (this.y < player.y + 50)) {
 
+        //reset player if collision is detected
         player.reset();
     }
 
 }
-// Draw the enemy on the screen, required method for game
+//@function - Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-var Player = function () {
-    this.x = 200;
-    this.y = 400;
-    this.sprite ='images/char-boy.png';
+
+/**
+* @description Player class
+* @class
+* @param {number} x - X-coordinate of a player
+* @param {number} y - X-coordinate of a player
+* @param {string} sprite - The image of a player
+*/
+var Player = function (sprite) {
+    this.x = PLAYER_START_X;
+    this.y = PLAYER_START_Y;
+    this.life = PLAYER_LIVES;
+    this.score = 0;
+    this.sprite = sprite;
 };
 
-var score = 0;
+//@function - Update the player position and score
 Player.prototype.update = function (dt) {
 
+    /*If player has reached water, place player in starting position again and 
+    increase the score as well.*/
     if (this.y < -10) {
-        console.log(this.y);
-        this.x = 200;
-        this.y = 400;
-        score = score + 100;
-        console.log (score);
+        this.x = PLAYER_START_X;
+        this.y = PLAYER_START_Y;
+        this.score = this.score + PLAYER_POINTS;
+
+        //Add a new gem into the array
+        if (this.score == 100) {
+            gems.push(new Gem(gemArray[Math.floor(Math.random() * 3)]));
+        }
+        
     }
 };
 
+//@function - Draw player, life and score on the screen
 Player.prototype.render = function (dt) {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    ctx.clearRect(300,10,400,30);
+    ctx.clearRect(0,10,400,30);
     ctx.font = "20px Arial";
-    ctx.fillText("SCORE : " + score  , 310, 30);
+    ctx.fillStyle = "black";
+    ctx.fillText("LIFE : " + this.life ,1,40);
+    ctx.fillText("SCORE : " + this.score  , 310, 40);
 };
 
+/**
+* @function - reset player position, change score and life
+* once collision has been detected
+*/
 Player.prototype.reset = function () {
 
-    player.x = 200;
-    player.y = 400;
+    //place player in starting position
+    this.x = PLAYER_START_X;
+    this.y = PLAYER_START_Y;
 
-    if (score > 0) {
-        score =score - 100;
-    }
+    //player life has to be reduced
+    this.life -= 1;
+
+    //if there is no life left end the game
+    if (this.life=== 0) 
+        gameFlag = "end";
 }
 
+/**
+* @description Gem class
+* @class
+* @param {number} x - X-coordinate of a gem
+* @param {number} y - X-coordinate of a gem
+* @param {string} sprite - The image of a gem
+*/
+var Gem = function (sprite, type) {
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+    this.x = Math.floor(Math.random() * 200); 
+    this.y = Math.floor(Math.random() * 200);
+    this.sprite = sprite;
+}
 
+//@function - Draw Gem on to the screen
+Gem.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.sprite),this.x,this.y);
+}
+
+//@function - this function checks if player collected any gems
+//add benefit according to gem
+Gem.prototype.collectGems = function () {
+
+    //If player collected gems
+    if ((this.x + 70 > player.x) && (this.y + 100 > player.y ) &&
+        (this.x < player.x + 70) && (this.y < player.y + 70)) {
+
+        //Add one life to player if green gem is collected
+        if (this.sprite == "images/gem-green.png")
+            player.life += 1;
+        //Increase the score if blue gem is collected
+        else if (this.sprite == "images/gem-blue.png")
+            player.score += 200;
+        //Increase the score if orange gem is collected
+        else if (this.sprite == "images/gem-orange.png")
+            player.score += 50;
+    
+        //Remove Gem object from gems array
+        gems.splice(0,1);  
+
+        //Add a new random Gem object into gems array
+        gems.push(new Gem (gemArray[Math.floor(Math.random() * 3)]));
+    }
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -89,37 +172,51 @@ Player.prototype.reset = function () {
 var allEnemies = [];
 var player;
 
-var enemyBug01 = new Enemy(0,70,2);
-var enemyBug02 = new Enemy(0,120,3);
-var enemyBug03 = new Enemy(0,240,2);
+//gem array to store Gem objects
+var gems = [];
+var gemArray = ['images/gem-green.png','images/gem-blue.png','images/gem-orange.png'];  
 
+//Create Enemy bug Objects 
+var enemyBug01 = new Enemy(0,(Math.floor(Math.random() * 280)),2);
+var enemyBug02 = new Enemy(0,(Math.floor(Math.random() * 280)),3.1);
+var enemyBug03 = new Enemy(0,(Math.floor(Math.random() * 280)),1.8);
+
+//Add all created enemy bug objects to an allEnemies Array
 allEnemies.push(enemyBug01);
 allEnemies.push(enemyBug02);
 allEnemies.push(enemyBug03);
 
+//Create Player object
 player = new Player();
 
 
+//@function - to handle keyboard events
 Player.prototype.handleInput = function(key) {
     if (key == 'up') {
         // Allow all 'up' movements, as a win will be
         // anything in the water at the top of the board
-        this.y = this.y - 20;
+        this.y = this.y - PLAYER_STEP;
 
-    } else if (key == 'left') {
+    } else if ((key == 'left') && (this.x > 0)) {
         // Ensure player will still be on the board
-        if (this.x > 0) {
-            this.x = this.x - 20;
+            this.x = this.x - PLAYER_STEP;
+
+    } else if ((key == 'right') && ((this.x -70) < 330)) {
+        // Ensure player will still be on the board
+            this.x = this.x + PLAYER_STEP;
+
+    } else if ((key == 'down') && (this.y + 70 < 500)) {
+        // Ensure player will still be on the board
+            this.y = this.y + PLAYER_STEP;
+
+    } else if (key == 'space') {
+        //If space key is pressed Pause the game
+        if (gameFlag === "paused") {
+            gameFlag ="started";
+        } else {
+            gameFlag = "paused";
         }
-    } else if (key == 'right') {
-        // Ensure player will still be on the board
-        
-            this.x = this.x + 20;
 
-    } else if (key == 'down') {
-        // Ensure player will still be on the board
-        
-            this.y = this.y + 20;
     }
 };
 
@@ -127,11 +224,11 @@ Player.prototype.handleInput = function(key) {
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
+        32: 'space',
         37: 'left',
         38: 'up',
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
