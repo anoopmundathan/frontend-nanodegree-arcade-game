@@ -3,9 +3,9 @@
 var CANVAS_WIDTH  = 505;  //canvas width
 var CANVAS_HEIGHT = 606;  //canvas height
 
-//PLAYER 
+//PLAYER
 var PLAYER_LIVES   = 3;   //starting number of lives
-var PLAYER_START_X = 200; //starting x cordinate position 
+var PLAYER_START_X = 200; //starting x cordinate position
 var PLAYER_START_Y = 400; //starting y cordinate position
 var PLAYER_STEP    = 20;  //player movement speed
 var PLAYER_POINTS  = 100; //how much player can earn once reached water
@@ -55,7 +55,7 @@ Enemy.prototype.collision = function () {
         player.reset();
     }
 
-}
+};
 
 /**
 * @description - Draw the enemy on the screen
@@ -127,7 +127,7 @@ Player.prototype.reset = function () {
     //if there is no life left end the game
     if (this.life=== 0) 
         gameFlag = "end";
-}
+};
 
 /**
 * @description Gem class
@@ -140,14 +140,14 @@ var Gem = function (sprite) {
     this.x = Math.floor(Math.random() * 200); 
     this.y = Math.floor(Math.random() * 200);
     this.sprite = sprite;
-}
+};
 
 /**
 * @description - Draw Gem on to the screen
 */
 Gem.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite),this.x,this.y);
-}
+};
 
 /**
 * @description - this function checks if player collected any gems
@@ -175,7 +175,7 @@ Gem.prototype.collectGems = function () {
         //Add a new random Gem object into gems array
         gems.push(new Gem (gemArray[Math.floor(Math.random() * 3)]));
     }
-}
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -186,7 +186,7 @@ var player;
 
 //gem array to store Gem objects
 var gems = [];
-var gemArray = ['images/gem-green.png','images/gem-blue.png','images/gem-orange.png'];  
+var gemArray = ['images/gem-green.png','images/gem-blue.png','images/gem-orange.png'];
 
 //Create Enemy bug Objects 
 var enemyBug01 = new Enemy(0,(Math.floor(Math.random() * 280)),2);
