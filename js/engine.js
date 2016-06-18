@@ -72,7 +72,7 @@ var Engine = (function(global) {
         }
 
         //check if any key is pressed
-        doc.addEventListener('keyup', function(e) {
+        doc.addEventListener('keyup', function handleKeyup(e) {
             var allowedKeys = {
                 49: 0,
                 50: 1,
@@ -83,7 +83,7 @@ var Engine = (function(global) {
 
             //if any key pressed between 1 and 5, start the game
             if ((allowedKeys[e.keyCode] >= 0) && (allowedKeys[e.keyCode]) <= 4) {
-                doc.removeEventListener('keyup');
+               //doc.removeEventListener('keyup',handleKeyup);
 
                 //create player object from selected player
                 player = new Player(heroes[allowedKeys[e.keyCode]]);
