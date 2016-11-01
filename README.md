@@ -25,7 +25,7 @@ You can goto below link
 OR
 
 * Download the game files (or fork them from github) [Link](https://github.com/anoopmundathan/frontend-nanodegree-arcade-game.git)
-* Open index.html file in your browser
+* ```$ Open index.html```
 * You should see a starting screen - Select your player by pressing key between 1 to 5
 
 ## Control
