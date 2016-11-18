@@ -1,6 +1,7 @@
 frontend-nanodegree-arcade-game
 ===============================
-## About this project
+[Live Demo](http://anoopmundathan.github.io/frontend-nanodegree-arcade-game/)
+
 It is a classical arcade game (Frogger) with a number of modification.
 It is made as a project for Udacity Nanodegree.
 
